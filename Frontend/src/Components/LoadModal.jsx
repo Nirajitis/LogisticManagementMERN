@@ -8,8 +8,8 @@ export default function LoadModal({
   onDelete,
   onClose,
 }) {
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+  return ( 
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-[800px] max-h-[90vh] overflow-y-auto">
         
         <h2 className="text-xl font-bold mb-4">
@@ -53,14 +53,27 @@ export default function LoadModal({
         {/* Buttons */}
         <div className="flex justify-end gap-4">
           {mode === "edit" && (
-            <button className="btn btn-error" onClick={onDelete}>
+            <button
+              type="button"
+              className="btn btn-error"
+              onClick={onDelete}
+            >
               Delete
             </button>
           )}
-          <button className="btn btn-success" onClick={onSave}>
+          <button
+            type="button"
+            className="btn btn-success"
+            onClick={onSave}
+          >
             {mode === "create" ? "Submit" : "Save Changes"}
           </button>
-          <button className="btn" onClick={onClose}>
+
+          <button
+            type="button"
+            className="btn"
+            onClick={onClose}
+          >
             Cancel
           </button>
         </div>

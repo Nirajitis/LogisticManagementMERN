@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import LoadModal from "./LoadModal"; // shared modal
+import LoadModal from "./LoadModal";
 
+// Row highlight colors by status
 const rowStatusColors = {
   Open: "bg-red-50",
   Pending: "bg-yellow-50",
@@ -9,149 +10,308 @@ const rowStatusColors = {
   Covered: "bg-purple-50",
   Loading: "bg-orange-50",
   Unloading: "bg-gray-100",
-  "In Yard": "bg-pink-50"
+  "In Yard": "bg-pink-50",
 };
 
-export default function LoadBoard({ loads = [], setLoads = () => {} }) {
+export default function LoadBoard({ loads = [], setLoads }) {
+
   const [showModal, setShowModal] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+
   const [formData, setFormData] = useState({
     loadNumber: "",
     workOrder: "",
     driver: "",
-    carrier: "",
-    shipDate: "",
-    deliveryDate: "",
     customer: "",
-    origin: "",
-    destination: "",
     status: "Open",
+
+    shipper: "",
+    pickupStreet: "",
+    pickupCity: "",
+    pickupState: "",
+    pickupZip: "",
+    pickupDate: "",
+    pickupNotes: "",
+
+    consignee: "",
+    deliveryStreet: "",
+    deliveryCity: "",
+    deliveryState: "",
+    deliveryZip: "",
+    deliveryDate: "",
+    deliveryNotes: ""
   });
 
-  const openNewLoadModal = () => {
-    setSelectedIndex(null);
+  // ================= OPEN EDIT MODAL =================
+
+  const openEditModal = (load) => {
+
+    setSelectedId(load._id);
+
     setFormData({
-      loadNumber: "",
-      workOrder: "",
-      driver: "",
-      carrier: "",
-      shipDate: "",
-      deliveryDate: "",
-      customer: "",
-      origin: "",
-      destination: "",
-      status: "Open",
+      loadNumber: load.loadNumber || "",
+      workOrder: load.workOrder || "",
+      driver: load.driver || "",
+      customer: load.customer || "",
+      status: load.status || "Open",
+
+      shipper: load.pickup?.shipper || "",
+      pickupStreet: load.pickup?.street || "",
+      pickupCity: load.pickup?.city || "",
+      pickupState: load.pickup?.state || "",
+      pickupZip: load.pickup?.zip || "",
+      pickupDate: load.pickup?.date?.slice(0, 10) || "",
+      pickupNotes: load.pickup?.notes || "",
+
+      consignee: load.delivery?.consignee || "",
+      deliveryStreet: load.delivery?.street || "",
+      deliveryCity: load.delivery?.city || "",
+      deliveryState: load.delivery?.state || "",
+      deliveryZip: load.delivery?.zip || "",
+      deliveryDate: load.delivery?.date?.slice(0, 10) || "",
+      deliveryNotes: load.delivery?.notes || ""
     });
+
     setShowModal(true);
   };
 
-  const openEditModal = (index) => {
-    setSelectedIndex(index);
-    setFormData(loads[index]);
-    setShowModal(true);
+  // ================= INPUT HANDLER =================
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // ================= SAVE EDIT (PUT API) =================
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    if (selectedIndex === null) {
-      setLoads([...loads, formData]); // ✅ add new load
-    } else {
-      const updated = [...loads];
-      updated[selectedIndex] = formData;
-      setLoads(updated); // ✅ update existing load
+
+    try {
+
+      const payload = {
+        loadNumber: formData.loadNumber,
+        workOrder: formData.workOrder,
+        driver: formData.driver,
+        customer: formData.customer,
+        status: formData.status,
+
+        pickup: {
+          shipper: formData.shipper,
+          street: formData.pickupStreet,
+          city: formData.pickupCity,
+          state: formData.pickupState,
+          zip: formData.pickupZip,
+          date: formData.pickupDate,
+          notes: formData.pickupNotes
+        },
+
+        delivery: {
+          consignee: formData.consignee,
+          street: formData.deliveryStreet,
+          city: formData.deliveryCity,
+          state: formData.deliveryState,
+          zip: formData.deliveryZip,
+          date: formData.deliveryDate,
+          notes: formData.deliveryNotes
+        }
+      };
+
+      const res = await fetch(
+        `http://localhost:4001/api/loads/${selectedId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        }
+      );
+
+      const result = await res.json();
+
+      setLoads(prev =>
+        prev.map(load =>
+          load._id === selectedId ? result.data : load
+        )
+      );
+
+      setShowModal(false);
+
+    } catch (error) {
+      console.error("Update failed:", error);
     }
-    setShowModal(false);
   };
 
-  const handleDelete = () => {
-    const updated = loads.filter((_, i) => i !== selectedIndex);
-    setLoads(updated); // ✅ delete load
-    setShowModal(false);
+  // ================= DELETE LOAD =================
+
+  const handleDelete = async () => {
+
+    try {
+
+      await fetch(
+        `http://localhost:4001/api/loads/${selectedId}`,
+        { method: "DELETE" }
+      );
+
+      setLoads(prev =>
+        prev.filter(load => load._id !== selectedId)
+      );
+
+      setShowModal(false);
+
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
   };
+
+  // ================= STATUS DROPDOWN =================
+
+  const updateStatus = async (id, status) => {
+
+    try {
+
+      const res = await fetch(
+        `http://localhost:4001/api/loads/${id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status })
+        }
+      );
+
+      const result = await res.json();
+
+      setLoads(prev =>
+        prev.map(load =>
+          load._id === id ? result.data : load
+        )
+      );
+
+    } catch (error) {
+      console.error("Status update failed:", error);
+    }
+  };
+
+  // ================= ACTIVE FILTER =================
+
+  const activeLoads = loads.filter(load =>
+    !["Delivered", "Completed", "Closed"].includes(load.status)
+  );
+
+  // ================= UI =================
 
   return (
-    <div className="space-y-6">
-      {/* Load Table */}
-      <div className="navbar bg-white fixed top-36 shadow-sm w-full md:px-5 px-6">
-        <table className="table table-zebra w-full">
-          <thead className="bg-blue-600 text-white">
+    <div className="w-full">
+
+  <div className="bg-white shadow-md overflow-auto h-[calc(100vh-160px)]">
+
+    <table className="table table-zebra w-full">
+
+      <thead className="bg-blue-600 text-white sticky top-0 z-20">
             <tr>
               <th>Load #</th>
               <th>W/O #</th>
               <th>Driver</th>
-              
-              <th>Ship Date</th>
-              <th>Del Date</th>
+              <th>Pickup Date</th>
+              <th>Delivery Date</th>
               <th>Customer</th>
               <th>Origin</th>
               <th>Destination</th>
               <th>Status</th>
             </tr>
           </thead>
+
           <tbody>
-            {loads.length > 0 ? (
-              loads.map((load, index) => (
-                <tr key={load.id} className={rowStatusColors[load.status]}>
+
+            {activeLoads.length > 0 ? (
+
+              activeLoads.map((load) => (
+
+                <tr
+                  key={load._id}
+                  className={rowStatusColors[load.status] || ""}
+                >
+
                   <td>
                     <button
                       className="link link-primary"
-                      onClick={() => openEditModal(index)}
+                      onClick={() => openEditModal(load)}
                     >
                       {load.loadNumber}
                     </button>
                   </td>
+
                   <td>{load.workOrder}</td>
                   <td>{load.driver}</td>
-                  
-                  <td>{load.pickupDate}</td>
-                  <td>{load.deliveryDate}</td>
-                  <td>{load.customer}</td>
-                  <td>{load.pickupCity}, {load.pickupState}</td>
-                  <td>{load.deliveryCity}, {load.deliveryState}</td>
+
                   <td>
-                 <select
-                    className="select select-sm select-bordered"
-                    value={load.status}
-                    onChange={(e) => {
-                      const updated = [...loads];
-                      updated[index] = {
-                        ...updated[index],
-                        status: e.target.value
-                      };
-                      setLoads(updated);
-                    }}
-                  >
-                    <option value="Open">Open</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Dispatched">Dispatched</option>
-                    <option value="On Route">On Route</option>
-                    <option value="Covered">Covered</option>
-                    <option value="Loading">Loading</option>
-                    <option value="Unloading">Unloading</option>
-                    <option value="In Yard">In Yard</option>
-                  </select>
+                    {load.pickup?.date
+                      ? new Date(load.pickup.date).toLocaleDateString()
+                      : "-"}
                   </td>
+
+                  <td>
+                    {load.delivery?.date
+                      ? new Date(load.delivery.date).toLocaleDateString()
+                      : "-"}
+                  </td>
+
+                  <td>{load.customer}</td>
+
+                  <td>
+                    {load.pickup?.city}, {load.pickup?.state}
+                  </td>
+
+                  <td>
+                    {load.delivery?.city}, {load.delivery?.state}
+                  </td>
+
+                  <td>
+                    <select
+                      className="select select-sm select-bordered"
+                      value={load.status}
+                      onChange={(e) =>
+                        updateStatus(load._id, e.target.value)
+                      }
+                    >
+                      <option>Open</option>
+                      <option>Pending</option>
+                      <option>Dispatched</option>
+                      <option>On Route</option>
+                      <option>Loading</option>
+                      <option>Unloading</option>
+                      <option>In Yard</option>
+                      <option>Delivered</option>
+                      <option>Completed</option>
+                      <option>Closed</option>
+                    </select>
+                  </td>
+
                 </tr>
               ))
+
             ) : (
+
               <tr>
-                {/* ✅ colSpan must be a number, not string */}
-                <td colSpan={9} className="text-center text-sm opacity-60">
-                  No loads added yet.
+                <td colSpan={9} className="text-center py-6 opacity-60">
+                  No loads available
                 </td>
               </tr>
+
             )}
+
           </tbody>
+
         </table>
+
       </div>
 
-      {/* Shared Modal */}
       {showModal && (
         <LoadModal
-          mode={selectedIndex === null ? "create" : "edit"}
+          mode="edit"
           formData={formData}
           onChange={handleChange}
           onSave={handleSave}
@@ -159,22 +319,7 @@ export default function LoadBoard({ loads = [], setLoads = () => {} }) {
           onClose={() => setShowModal(false)}
         />
       )}
+
     </div>
   );
-}
-
-// Status badge colors
-function getStatusColor(status) {
-  switch (status) {
-    case "Pending":
-      return "badge-warning";
-    case "Open":
-      return "badge-error";
-    case "Dispatched":
-      return "badge-success";
-    case "On Route":
-      return "badge-info";
-    default:
-      return "badge-neutral";
-  }
 }

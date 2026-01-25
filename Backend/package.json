@@ -1,0 +1,28 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Mern Project Logistic",
+  "homepage": "https://github.com/Nirajitis/LogisticManagementMERN#readme",
+  "bugs": {
+    "url": "https://github.com/Nirajitis/LogisticManagementMERN/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nirajitis/LogisticManagementMERN.git"
+  },
+  "license": "ISC",
+  "author": "Niraj",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongoose": "^9.1.5",
+    "nodemon": "^3.1.11"
+  }
+}

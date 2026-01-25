@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
   const ThemeControl = (
@@ -26,24 +27,63 @@ function Navbar() {
 </label>
   )
   const NavItems = (
-    <>
+  <>
     <li>
-        <a>Dispatch</a>
-      </li>
-      <li>
-        <a>Maintainance</a>
-      </li>
-      <li>
-        <a>Admin</a>
-      </li>
-      <li>
-        <a>IFTA</a>
-      </li>
-      <li>
-        <a>Help</a>
-      </li>
-    </>
-  )
+      <NavLink
+        to="/dispatch"
+        className={({ isActive }) =>
+          isActive ? "font-bold text-blue-600" : ""
+        }
+      >
+        Dispatch
+      </NavLink>
+    </li>
+
+    <li>
+      <NavLink
+        to="/maintenance"
+        className={({ isActive }) =>
+          isActive ? "font-bold text-blue-600" : ""
+        }
+      >
+        Maintenance
+      </NavLink>
+    </li>
+
+    <li>
+      <NavLink
+        to="/admin"
+        className={({ isActive }) =>
+          isActive ? "font-bold text-blue-600" : ""
+        }
+      >
+        Admin
+      </NavLink>
+    </li>
+
+    <li>
+      <NavLink
+        to="/ifta"
+        className={({ isActive }) =>
+          isActive ? "font-bold text-blue-600" : ""
+        }
+      >
+        IFTA
+      </NavLink>
+    </li>
+
+    <li>
+      <NavLink
+        to="/help"
+        className={({ isActive }) =>
+          isActive ? "font-bold text-blue-600" : ""
+        }
+      >
+        Help
+      </NavLink>
+    </li>
+  </>
+);
   const UserAvatar=(
     <div className="dropdown dropdown-end">
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
@@ -69,7 +109,7 @@ function Navbar() {
   )
   return (
     <>
-      <div className="navbar bg-white-100 fixed top-0 shadow-sm w-full md:px-5 px-6">
+      <div className="navbar bg-white fixed top-0 w-full z-40">
   <div className="navbar-start">
     <div className="dropdown">
       <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

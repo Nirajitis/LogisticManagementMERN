@@ -1,17 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@400;500&display=swap');
 @import "tailwindcss";
 
+/* ================= GLOBAL BASE ================= */
 
-body{
-  font-family: poppins, sans-serif;
-  font-weight: 400;
-}
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light; /* forces light mode */
+  /* FORCE LIGHT UI */
+  color-scheme: light;
   background-color: #ffffff;
   color: #213547;
 
@@ -21,27 +19,37 @@ body{
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ================= BODY ================= */
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: Poppins, sans-serif;
+  font-weight: 400;
+  background-color: #ffffff;
+}
+
+/* ================= LINKS ================= */
+
 a {
   font-weight: 520;
   color: black;
   text-decoration: inherit;
 }
+
 a:hover {
   color: rgb(60, 59, 59);
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+/* ================= HEADINGS ================= */
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
+/* ================= BUTTON RESET (LET DAISYUI STYLE) ================= */
 
 button {
   border-radius: 8px;
@@ -50,27 +58,46 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: transparent;
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* ================= FORM ELEMENT FIX ================= */
+
+/* Prevent browser dark mode styling */
+input,
+select,
+textarea {
+  color-scheme: light;
+  background-color: white;
+  color: #213547;
+}
+
+/* ================= SCROLLBAR FIX (OPTIONAL NICE LOOK) ================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cfcfcf;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b5b5b5;
 }
