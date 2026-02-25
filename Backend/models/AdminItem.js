@@ -1,15 +1,17 @@
 import mongoose from "mongoose";
 
-const adminItemSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
+const adminItemSchema = new mongoose.Schema(
+  {
+    category: {
+      type: String,
+      required: true
+    },
+    data: {
+      type: Object,
+      required: true
+    }
   },
-  category: {
-    type: String,
-    required: true
-  }
-});
+  { timestamps: true }
+);
 
 export default mongoose.model("AdminItem", adminItemSchema);

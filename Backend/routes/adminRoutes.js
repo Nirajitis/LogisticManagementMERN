@@ -1,39 +1,16 @@
 import express from "express";
-import AdminItem from "../models/AdminItem.js";
+import {
+  createAdminItem,
+  getAdminItems,
+  deleteAdminItem,
+  updateAdminItem
+} from "../controllers/Admin.Controller.js";
 
 const router = express.Router();
 
-// GET items
-router.get("/:category", async (req, res) => {
-  const { category } = req.params;
-
-  const items = await AdminItem.find({ category });
-
-  res.json({ data: items });
-});
-
-// ADD item
-router.post("/:category", async (req, res) => {
-  const { category } = req.params;
-  const { name } = req.body;
-
-  const item = new AdminItem({
-    name,
-    category
-  });
-
-  await item.save();
-
-  res.json({ data: item });
-});
-
-// DELETE item
-router.delete("/:category/:id", async (req, res) => {
-  const { id } = req.params;
-
-  await AdminItem.findByIdAndDelete(id);
-
-  res.json({ success: true });
-});
+router.post("/:category", createAdminItem);
+router.get("/:category", getAdminItems);
+router.put("/:category/:id", updateAdminItem);   // ✅ ADDED
+router.delete("/:category/:id", deleteAdminItem);
 
 export default router;

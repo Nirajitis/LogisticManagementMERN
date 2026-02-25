@@ -49,13 +49,6 @@ export default function Dispatch({ loads }) {
             Dispatch History (Completed Loads)
         </h2>
 
-        <button
-            className="btn btn-sm btn-outline"
-            onClick={() => navigate("/")}
-        >
-            ← Back
-        </button>
-
     </div>
 
       {/* Filters */}

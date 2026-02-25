@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AdminCategoryModal from "../Components/AdminCategoryModal";
+import AdminListModal from "../Components/AdminListModal";
 
 const categories = [
   "Drivers",
@@ -36,7 +36,7 @@ export default function Admin() {
 
       {/* Modal */}
       {selectedCategory && (
-        <AdminCategoryModal
+        <AdminListModal
           category={selectedCategory}
           onClose={() => setSelectedCategory(null)}
         />
