@@ -1,3 +1,4 @@
+import { useNavigate, Link } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "axios";
 import loginImage from "../assets/LoginPageImage.jpg";
@@ -7,6 +8,7 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,9 +23,10 @@ function LoginPage() {
 
       // Save token
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.role);
 
       // Redirect after login
-      window.location.href = "/";
+      navigate("/home");
 
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
@@ -83,10 +86,10 @@ function LoginPage() {
             </div>
 
             <p className="text-center mt-4 text-sm">
-            Don't have an account?{" "}
-            <a href="/register" className="link link-primary">
-                Register Now
-            </a>
+              Don't have an account?{" "}
+              <span className="text-primary">
+                Contact Admin
+              </span>
             </p>
 
             <button
@@ -96,7 +99,6 @@ function LoginPage() {
             >
               {loading ? "Logging in..." : "Login"}
             </button>
-
           </form>
         </div>
       </div>

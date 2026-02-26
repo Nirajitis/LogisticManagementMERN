@@ -7,8 +7,8 @@ import LoadBoard from "./Components/LoadBoard";
 import Admin from "./Pages/Admin";
 import ControlCenter from "./Components/ControlCenter";
 import LoginPage from "./Pages/LoginPage";
-import RegisterPage from "./Pages/RegisterPage";
 import Dispatch from "./Pages/Dispatch";
+import CreateUser from "./Pages/CreateUser";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -39,54 +39,68 @@ function App() {
   return (
     <>
       {/* Hide navbar on login & register */}
-      {location.pathname !== "/login" &&
-        location.pathname !== "/register" &&
-        <Navbar />
-      }
+      {location.pathname !== "/" &&
+      location.pathname !== "/register" &&
+      <Navbar />}
 
-      <main className="min-h-screen bg-gray-50 pt-20">
+      <main
+  className={`min-h-screen bg-gray-50 ${
+    location.pathname === "/login" ||
+    location.pathname === "/register"
+      ? ""
+      : "pt-20"
+  }`}
+>
 
         <Routes>
 
-          {/* LOGIN */}
-          <Route path="/login" element={<LoginPage />} />
+  {/* Login Page (default) */}
+  <Route path="/" element={<LoginPage />} />
 
-          {/* REGISTER */}
-          <Route path="/register" element={<RegisterPage />} />
+  {/* Home Page (Protected) */}
+  <Route
+    path="/home"
+    element={
+      <ProtectedRoute>
+        <>
+          <ControlCenter loads={loads} setLoads={setLoads} />
+          <LoadBoard loads={loads} setLoads={setLoads} />
+        </>
+      </ProtectedRoute>
+    }
+  />
 
-          {/* PROTECTED HOME */}
-          <Route
-            path="/"
-            element={
-            <ProtectedRoute>
-              <>
-                <ControlCenter loads={loads} setLoads={setLoads} />
-                <LoadBoard loads={loads} setLoads={setLoads} />
-              </>
-            </ProtectedRoute>
-            }
-            />
+  <Route
+    path="/create-user"
+    element={
+      localStorage.getItem("role") === "admin" ? (
+        <CreateUser />
+      ) : (
+        <Navigate to="/home" replace />
+      )
+    }
+  />
 
-          {/* PROTECT DISPATCH */}
-          <Route
-            path="/dispatch"
-            element={
-              <ProtectedRoute>
-                <Dispatch loads={loads} />
-              </ProtectedRoute>
-            }
-          />
-                    {/* ADMIN */}
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <Admin />
-              </ProtectedRoute>
-            }
-          />
+  {/* Other protected pages */}
+  <Route
+    path="/dispatch"
+    element={
+      <ProtectedRoute>
+        <Dispatch loads={loads} />
+      </ProtectedRoute>
+    }
+  />
 
-        </Routes>
+  <Route
+    path="/admin"
+    element={
+      <ProtectedRoute>
+        <Admin />
+      </ProtectedRoute>
+    }
+  />
+
+</Routes>
 
       </main>
     </>

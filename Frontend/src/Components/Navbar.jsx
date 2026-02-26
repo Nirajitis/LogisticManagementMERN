@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 function Navbar() {
@@ -8,9 +8,17 @@ function Navbar() {
     localStorage.getItem("profileImage") || ""
   );
 
+  const [role, setRole] = useState(localStorage.getItem("role"));
+
+  // ✅ Sync role when component loads
+  useEffect(() => {
+    setRole(localStorage.getItem("role"));
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login", { replace: true });
+    localStorage.removeItem("role");
+    window.location.href = "/";
   };
 
   const handleImageUpload = (e) => {
@@ -25,20 +33,17 @@ function Navbar() {
     reader.readAsDataURL(file);
   };
 
-  // Active link styling
   const navLinkClass = ({ isActive }) =>
     isActive ? "text-blue-600 font-semibold" : "hover:text-blue-500";
 
   const NavItems = (
     <>
-      {/* MAIN DISPATCH PAGE */}
       <li>
-        <NavLink to="/" className={navLinkClass}>
+        <NavLink to="/home" className={navLinkClass}>
           Dispatch
         </NavLink>
       </li>
 
-      {/* OPTIONAL LOAD HISTORY PAGE */}
       <li>
         <NavLink to="/dispatch" className={navLinkClass}>
           Load History
@@ -50,6 +55,15 @@ function Navbar() {
           Admin
         </NavLink>
       </li>
+
+      {/* ✅ SHOW ONLY IF ADMIN */}
+      {role === "admin" && (
+        <li>
+          <NavLink to="/create-user" className={navLinkClass}>
+            Create User
+          </NavLink>
+        </li>
+      )}
     </>
   );
 
@@ -131,7 +145,7 @@ function Navbar() {
       </div>
 
       <div className="navbar-end">
-        <div className="navbar-center hidden lg:flex">
+        <div className="navbar-center flex">
           <ul className="menu menu-horizontal px-1">{NavItems}</ul>
         </div>
 
