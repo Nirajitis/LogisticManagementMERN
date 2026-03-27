@@ -64,7 +64,7 @@ function App() {
       <ProtectedRoute>
         <>
           <ControlCenter loads={loads} setLoads={setLoads} />
-          <LoadBoard loads={loads} setLoads={setLoads} />
+          
         </>
       </ProtectedRoute>
     }

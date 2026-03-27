@@ -24,7 +24,6 @@ export default function LoadBoard({ loads = [], setLoads }) {
     driver: "",
     customer: "",
     status: "Open",
-
     shipper: "",
     pickupStreet: "",
     pickupCity: "",
@@ -32,7 +31,6 @@ export default function LoadBoard({ loads = [], setLoads }) {
     pickupZip: "",
     pickupDate: "",
     pickupNotes: "",
-
     consignee: "",
     deliveryStreet: "",
     deliveryCity: "",
@@ -54,7 +52,6 @@ export default function LoadBoard({ loads = [], setLoads }) {
       driver: load.driver || "",
       customer: load.customer || "",
       status: load.status || "Open",
-
       shipper: load.pickup?.shipper || "",
       pickupStreet: load.pickup?.street || "",
       pickupCity: load.pickup?.city || "",
@@ -62,7 +59,6 @@ export default function LoadBoard({ loads = [], setLoads }) {
       pickupZip: load.pickup?.zip || "",
       pickupDate: load.pickup?.date?.slice(0, 10) || "",
       pickupNotes: load.pickup?.notes || "",
-
       consignee: load.delivery?.consignee || "",
       deliveryStreet: load.delivery?.street || "",
       deliveryCity: load.delivery?.city || "",
@@ -79,14 +75,13 @@ export default function LoadBoard({ loads = [], setLoads }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
 
-  // ================= SAVE EDIT (PUT API) =================
+  // ================= SAVE EDIT =================
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -99,7 +94,6 @@ export default function LoadBoard({ loads = [], setLoads }) {
         driver: formData.driver,
         customer: formData.customer,
         status: formData.status,
-
         pickup: {
           shipper: formData.shipper,
           street: formData.pickupStreet,
@@ -109,7 +103,6 @@ export default function LoadBoard({ loads = [], setLoads }) {
           date: formData.pickupDate,
           notes: formData.pickupNotes
         },
-
         delivery: {
           consignee: formData.consignee,
           street: formData.deliveryStreet,
@@ -145,7 +138,7 @@ export default function LoadBoard({ loads = [], setLoads }) {
     }
   };
 
-  // ================= DELETE LOAD =================
+  // ================= DELETE =================
 
   const handleDelete = async () => {
 
@@ -167,7 +160,7 @@ export default function LoadBoard({ loads = [], setLoads }) {
     }
   };
 
-  // ================= STATUS DROPDOWN =================
+  // ================= STATUS UPDATE =================
 
   const updateStatus = async (id, status) => {
 
@@ -195,22 +188,16 @@ export default function LoadBoard({ loads = [], setLoads }) {
     }
   };
 
-  // ================= ACTIVE FILTER =================
-
-  const activeLoads = loads.filter(load =>
-    !["Delivered", "Completed", "Closed"].includes(load.status)
-  );
-
   // ================= UI =================
 
   return (
     <div className="w-full">
 
-  <div className="bg-white shadow-md overflow-auto h-[calc(100vh-160px)]">
+      <div className="bg-white shadow-md overflow-auto h-[calc(100vh-160px)]">
 
-    <table className="table table-zebra w-full">
+        <table className="table table-zebra w-full">
 
-      <thead className="bg-blue-600 text-white sticky top-0 z-20">
+          <thead className="bg-blue-600 text-white sticky top-0 z-20">
             <tr>
               <th>Load #</th>
               <th>W/O #</th>
@@ -226,9 +213,9 @@ export default function LoadBoard({ loads = [], setLoads }) {
 
           <tbody>
 
-            {activeLoads.length > 0 ? (
+            {loads.length > 0 ? (
 
-              activeLoads.map((load) => (
+              loads.map((load) => (
 
                 <tr
                   key={load._id}
@@ -249,13 +236,13 @@ export default function LoadBoard({ loads = [], setLoads }) {
 
                   <td>
                     {load.pickup?.date
-                      ? new Date(load.pickup.date).toLocaleDateString()
+                      ? load.pickup.date.slice(0, 10)
                       : "-"}
                   </td>
 
                   <td>
                     {load.delivery?.date
-                      ? new Date(load.delivery.date).toLocaleDateString()
+                      ? load.delivery.date.slice(0, 10)
                       : "-"}
                   </td>
 
