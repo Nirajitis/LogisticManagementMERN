@@ -126,7 +126,7 @@ function ControlCenter({ loads, setLoads }) {
 
         <div className="-ml-[1px]">
           <button
-            className="btn btn-warning join-item"
+            className="btn border-2 !border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100"
             onClick={() => setOpenModal(true)}
           >
             Create New Load
@@ -151,7 +151,7 @@ function ControlCenter({ loads, setLoads }) {
             onChange={(e) => setToDate(e.target.value)}
           />
 
-          <div className="join">
+          <div className="flex gap-2">
             <input
               type="search"
               placeholder="Search..."
@@ -159,9 +159,7 @@ function ControlCenter({ loads, setLoads }) {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="btn btn-warning join-item">
-              Search
-            </button>
+            
           </div>
         </div>
       </div>

@@ -137,7 +137,7 @@ export default function AdminFormModal({
       <div className="w-[800px] bg-base-100 shadow-xl rounded border">
 
         {/* HEADER */}
-        <div className="flex justify-between items-center bg-neutral text-neutral-content px-4 py-2 border-b-2 border-red-500 rounded-t">
+        <div className="flex justify-between items-center bg-blue-600 text-white px-5 py-3 rounded-t">
           <h2 className="font-semibold">
             {mode === "edit" ? "Edit" : "Add"} {category.slice(0, -1)}
           </h2>

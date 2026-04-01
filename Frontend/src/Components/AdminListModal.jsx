@@ -51,7 +51,7 @@ export default function AdminListModal({ category, onClose }) {
         <div className="w-[1100px] bg-base-100 shadow-xl rounded border">
 
           {/* HEADER */}
-          <div className="flex justify-between items-center bg-neutral text-neutral-content px-4 py-2 border-b-2 border-red-500 rounded-t">
+          <div className="flex justify-between items-center bg-blue-600 text-white px-5 py-3 rounded-t">
             <div className="flex items-center gap-3">
               <h2 className="font-semibold text-lg">
                 {category} List
